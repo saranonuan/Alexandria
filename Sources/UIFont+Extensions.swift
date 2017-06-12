@@ -62,17 +62,15 @@ extension UIFont {
             return
         }
         
-        let font = CGFont(provider)
-        
         var error: Unmanaged<CFError>?
-        guard !CTFontManagerRegisterGraphicsFont(font, &error) else {
+        guard let font = CGFont(provider), !CTFontManagerRegisterGraphicsFont(font, &error) else {
             error?.release()
             return
         }
         
         if let errorRef = error?.takeRetainedValue() {
             let errorDescription = CFErrorCopyDescription(errorRef)
-            print("Failed to load font: \(errorDescription) (\(name).\(fileExtension.type))")
+            print("Failed to load font: \(String(describing: errorDescription)) (\(name).\(fileExtension.type))")
         }
 
         error?.release()
